@@ -1,0 +1,17 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: video-serving
+spec:
+  template:
+    spec:
+      timeoutSeconds: 120
+      containers:
+        - image: quay.io/astoycos/serving-display:latest
+          env: 
+          - name: CEPH_ENDPOINT
+            value: <FILL IN HERE> 
+          - name: S3_ID
+            value: <Fill in s3 access key ID> 
+          - name: S3_SECRET_KEY
+            value: <Fill in s3 secret access Key> 

@@ -1,0 +1,31 @@
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tensorflow-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: coco-server
+    spec:
+      containers:
+      - name: coco-container
+        image: quay.io/astoycos/iot-dev-tf-serve
+        ports:
+        - containerPort: 8500
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: coco-service
+  name: coco-service
+spec:
+  ports:
+  - port: 8500
+    targetPort: 8500
+  selector:
+    app: resnet-server
+  type: LoadBalancer

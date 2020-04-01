@@ -1,0 +1,15 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaBridge
+metadata:
+  name: my-bridge
+spec:
+  replicas: 1
+  bootstrapServers: my-cluster-kafka-bootstrap.kafka:9092
+  producer:
+    config: 
+      max.request.size: 10000000
+  consumer:
+    config: 
+      max.request.size: 10000000
+  http:
+    port: 8080

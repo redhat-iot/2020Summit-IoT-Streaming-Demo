@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-bridge-ingress
+spec:
+  rules:
+  - host: my-bridge.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: my-bridge-bridge-service
+          servicePort: 8080

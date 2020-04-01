@@ -127,4 +127,4 @@ video-serving   http://video-serving.kafka.apps.astoycos-ocp.shiftstack.com   vi
 
 The following webpage will resemble the following 
 
-![app image](https://raw.githubusercontent.com/redhat-iot/2020Summit-IoT-Streaming-Demo/master/Docs/exp.png)
+![app image](https://raw.githubusercontent.com/redhat-iot/2020Summit-IoT-Streaming-Demo/master/Docs/Screenshot%20from%202020-04-01%2017-16-27.png)

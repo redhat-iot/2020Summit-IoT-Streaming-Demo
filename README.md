@@ -58,7 +58,7 @@ This POC demo uses some great cloud-native technologies, follow the instructions
 < content-length: 0
 ```
 
-## Setup Rook and Ceph Object storage 
+### Setup Rook and Ceph Object storage 
 
 Follow Open Data Hub's instructions for [Ceph installation with the Rook operator](https://opendatahub.io/docs/administration/advanced-installation/object-storage.html)
 

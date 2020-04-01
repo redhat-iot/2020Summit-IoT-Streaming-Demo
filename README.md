@@ -105,7 +105,7 @@ video-service   http://video-service.kafka.apps.astoycos-ocp.shiftstack.com   vi
 
 Now the Analyzed video stream segments should be stored in Ceph
 
-## Deploy Knative Serving Service 
+### Deploy Knative Serving Service 
 
 1. Apply your S3 Credentials and endpoint in `demo_yamls/video-serving-service.yaml` 
 

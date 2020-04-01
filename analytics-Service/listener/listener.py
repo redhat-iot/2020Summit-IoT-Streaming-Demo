@@ -22,14 +22,14 @@ def run_event(event):
     f = open("index.m3u8","w")
     logging.info("Creating index.m3u8 file")
 
+    ######Uncomment If running on local 
     #data = json.loads(event.Data())
-    
-    #print(data)
     #f.write(base64.b64decode(data['records'][0]['value']).decode("utf-8"))
-    #print(base64.b64decode(event.Data()).decode("utf-8"))
+    
     f.write(base64.b64decode(event.Data()).decode("utf-8"))
     logging.info("Writing to index.m3u8 file")
     f.close() 
+    
 
 def start_receiver():
         """Start listening to HTTP requests

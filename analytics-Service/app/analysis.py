@@ -18,14 +18,13 @@ from io import StringIO
 from matplotlib import pyplot as plt
 from PIL import Image
 
+import importlib
+
 from object_detection.utils import ops as utils_ops
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils
-# 
-#  
-#from models.research.object_detection.utils import ops as utils_ops
-#from models.research.object_detection.utils import visualization_utils  # nopep8
-#from models.research.object_detection.utils import label_map_util  # nopep8
+
+importlib.reload(visualization_utils)
 
 import datetime
 import time
@@ -37,12 +36,11 @@ import boto3
 import botocore
 
 
-s3_endpoint_url = #<Ceph URL>
-s3_access_key_id = #<Ceph Access Key> 
-s3_secret_access_key = #<Ceph Secred Access Key> 
+s3_endpoint_url = <Ceph Endpoint URL> 
+s3_access_key_id = <Ceph Access Key ID> 
+s3_secret_access_key = <Ceph Secret access key> 
 s3_bucket = 'MyBucket'
-
-tf_url = #<TensorFlow serving's Pod URL> 
+tf_url = 'http://<TF serving Host URL>/v1/models/ssdlite_mobilenet_v2_coco_2018_05_09:predict' 
 
 def get_category_index():
   """ Transforms label map into category index for visualization.
@@ -82,7 +80,7 @@ def run_inference_for_single_image(ts_url, image,i):
   print("Response received.")
 
   # Write output to a .txt file
-  #output_file = output_dir + "/text/output" + str(i) + ".txt"
+  #output_file = "output" + str(i) + ".txt"
   #with open(output_file, "w") as out:
       #out.write(json_response.text)
 
@@ -146,6 +144,8 @@ def generate():
                   aws_secret_access_key = s3_secret_access_key,
                   )
   
+  if not os.path.exists("app/segments"):
+            os.mkdir("app/segments")
   ffmpeg_log = open('app/ffmpeg_log.txt', 'w')
   # Make sure video stream is current 
   print("Removing stale stream file")
@@ -168,25 +168,15 @@ def generate():
   
   os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "protocol_whitelist;file,tcp,https,tls"
   cap = cv2.VideoCapture("app/out.mkv")
-  
-  # Get current width of frame
-  #width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)   # float
 
-  # Get current height of frame
-  #height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT) # float
-
-  #fourcc = cv2.VideoWriter_fourcc(*'X264')
-  
-  ##Another method for Writing Video from frames 
-  #video_writer = cv2.VideoWriter('video.mp4',fourcc,30.0,(int(width),int(height))  )
-  
   #Frame count 
   i = 0
   #Segment count
   j = 0
   ##Video writed to make MKV segments from Individual analyzed frames 
   video_writer = imageio.get_writer('app/segments/video-%d.mkv'%j,fps=3)
-
+  #video_writer = cv2.VideoWriter('app/segments/video-%d.mkv'%j,fourcc,3.0,(int(width),int(height))  )
+  
   #While incoming video is received from IoT Device Simulator
   while(cap.isOpened()): 
     
@@ -194,21 +184,26 @@ def generate():
     ret, tempframe = cap.read()
     if ret == True: 
       #Run inference on video Frame    
-      #cv2.imshow('Frame',tempframe)
-      #Cut down framerate to 15 fps 
+      #Cut down framerate to 6 fps 
       if (i%5 == 0):
         #Every 3 seconds Send Chunk of video
         if(i == 90):
           video_writer.close()
           i=0
-          #s3.upload_file("app/out.m3u8", s3_bucket, "out.m3u8")
           #Upload video Chunk(.mkv) to Ceph at the Specified bucket 
+          #TOGGLE FOR UPLOADING SEGMENTS TO CEPH
           s3.upload_file("app/segments/video-%d.mkv"%j, s3_bucket, "video-%d.mkv"%j)
           j = j+1
+          #video_writer = cv2.VideoWriter('app/segments/video-%d.mkv'%j,fourcc,3.0,(int(width),int(height))  )
           video_writer = imageio.get_writer('app/segments/video-%d.mkv'%j,fps=3)
         #(flag, encodedImage) = cv2.imencode(".jpg", out_frame)
         else:
-          video_writer.append_data(run_inference_for_single_image(tf_url, tempframe,i))
+          out_frame = run_inference_for_single_image(tf_url, tempframe,i)
+          #cv2.imshow("frame",out_frame)
+          #Convert to RGB imagespace since that's what imageio expects
+          im_bgr = cv2.cvtColor(out_frame, cv2.COLOR_RGB2BGR)
+          video_writer.append_data(im_bgr)
+
           i = i + 1
       else:
         i = i + 1
@@ -219,7 +214,7 @@ def generate():
   #Clear variables before closing module 
   j = 0
   i = 0
-  video_writer.close()
+  video_writer.close() 
   video_digest.kill()
  
 

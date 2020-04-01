@@ -8,9 +8,9 @@ import time
 import threading
 
 
-s3_endpoint_url = #<Ceph URL>
-s3_access_key_id = #<Ceph Access Key> 
-s3_secret_access_key = #<Ceph Secred Access Key> 
+s3_endpoint_url = <Ceph Endpoint> 
+s3_access_key_id = <Ceph Access Key ID>
+s3_secret_access_key = <Ceph Secret Access Key> 
 s3_bucket = 'MyBucket'
 
 s3 = boto3.client('s3',
@@ -43,9 +43,9 @@ def build_video():
         print("Getting Segment from Ceph: ",my_bucket_object.key)
         
         s3.download_file(s3_bucket,my_bucket_object.key,"segments/"+my_bucket_object.key)
-        video_digest = subprocess.Popen(["ffmpeg", "-i", "segments/"+my_bucket_object.key, "-s" ,"640x360", "-hls_flags", "delete_segments+append_list+omit_endlist",'-hls_list_size', '30',  "-f", "hls" ,"segments/out.m3u8"],stdout=ffmpeg_log,stderr=ffmpeg_log)
+        os.system("ffmpeg -i segments/"+my_bucket_object.key+" -s 640x360 -hls_flags delete_segments+append_list+omit_endlist -hls_list_size 30 -f hls segments/out.m3u8")
         s3.delete_object(Bucket=s3_bucket,Key=my_bucket_object.key)
-        #os.remove("segments/"+my_bucket_object.key)
+        os.remove("segments/"+my_bucket_object.key)
 
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@ It is split up into three major pieces
 
 The overall system diagram and main components are shown below
 
-![Demo Overview](diagram URL )
+![Demo Overview](https://raw.githubusercontent.com/redhat-iot/2020Summit-IoT-Streaming-Demo/master/Docs/overall_arch.png)
 
 ## Deploy this demo yourself 
 
@@ -127,4 +127,4 @@ video-serving   http://video-serving.kafka.apps.astoycos-ocp.shiftstack.com   vi
 
 The following webpage will resemble the following 
 
-[app image](Image URL)
+![app image](https://raw.githubusercontent.com/redhat-iot/2020Summit-IoT-Streaming-Demo/master/Docs/exp.png)

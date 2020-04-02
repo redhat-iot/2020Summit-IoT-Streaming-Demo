@@ -58,7 +58,7 @@ This POC demo uses some great cloud-native technologies, follow the instructions
 < content-length: 0
 ```
 
-## Setup Rook and Ceph Object storage 
+### Setup Rook and Ceph Object storage 
 
 Follow Open Data Hub's instructions for [Ceph installation with the Rook operator](https://opendatahub.io/docs/administration/advanced-installation/object-storage.html)
 
@@ -105,7 +105,7 @@ video-service   http://video-service.kafka.apps.astoycos-ocp.shiftstack.com   vi
 
 Now the Analyzed video stream segments should be stored in Ceph
 
-## Deploy Knative Serving Service 
+### Deploy Knative Serving Service 
 
 1. Apply your S3 Credentials and endpoint in `demo_yamls/video-serving-service.yaml` 
 

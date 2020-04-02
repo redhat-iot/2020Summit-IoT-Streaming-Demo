@@ -89,7 +89,7 @@ tensorflow-deployment-9d867d795-5q4kb   1/1     Running   0          2d4h
 
 2. Apply the knative service with the environment configs run 
 
-`demo_yamls/video-service.yaml.in | envsubst | oc apply -n kafka -f -`
+`cat demo_yamls/video-service.yaml.in | envsubst | oc apply -n kafka -f -`
 
 3. Make sure the knative service is ready with 
 
@@ -101,9 +101,20 @@ video-service   http://video-service.kafka.apps.astoycos-ocp.shiftstack.com   vi
 ```
 4. Deploy the Kafka-> Knative Source with 
 
-`oc apply -n kafka demo_yamls/kafka-event-source.yaml`
+`oc apply -n kafka -f demo_yamls/kafka-event-source.yaml`
 
 Now the Analyzed video stream segments should be stored in Ceph
+
+### Start the IoT camera simulator 
+
+1. Navigate to the `iotDeviceSimulator-kafka` with 
+-  `cd iotDeviceSimulator-kafka`
+2. Set the `STREAMURL` environment variable with 
+- `export STREAMURL=<Desired Youtube livestream>`
+3. Set Kafka Bridge Endpoint for this demo as follows 
+- `export ENDPOINT=my-bridge.io/topics/my-topic`
+4. Start the Simulator
+- `go run ./cmd` 
 
 ### Deploy Knative Serving Service 
 

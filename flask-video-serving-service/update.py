@@ -8,9 +8,9 @@ import time
 import threading
 
 
-s3_endpoint_url = <Ceph Endpoint> 
-s3_access_key_id = <Ceph Access Key ID>
-s3_secret_access_key = <Ceph Secret Access Key> 
+s3_endpoint_url = os.environ['CEPH_ENDPOINT']
+s3_access_key_id = os.environ['S3_ID']
+s3_secret_access_key = os.environ['S3_SECRET_KEY']
 s3_bucket = 'MyBucket'
 
 s3 = boto3.client('s3',

@@ -36,11 +36,11 @@ import boto3
 import botocore
 
 
-s3_endpoint_url = <Ceph Endpoint URL> 
-s3_access_key_id = <Ceph Access Key ID> 
-s3_secret_access_key = <Ceph Secret access key> 
+s3_endpoint_url = os.environ['CEPH_ENDPOINT']
+s3_access_key_id = os.environ['S3_ID']
+s3_secret_access_key = os.environ['S3_SECRET_KEY']
 s3_bucket = 'MyBucket'
-tf_url = 'http://<TF serving Host URL>/v1/models/ssdlite_mobilenet_v2_coco_2018_05_09:predict' 
+tf_url = os.environ['TF_URL']
 
 def get_category_index():
   """ Transforms label map into category index for visualization.

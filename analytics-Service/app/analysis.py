@@ -143,7 +143,8 @@ def generate():
                   aws_access_key_id = s3_access_key_id,
                   aws_secret_access_key = s3_secret_access_key,
                   )
-  
+  s3.create_bucket(Bucket=s3_bucket)
+
   if not os.path.exists("app/segments"):
             os.mkdir("app/segments")
   ffmpeg_log = open('app/ffmpeg_log.txt', 'w')

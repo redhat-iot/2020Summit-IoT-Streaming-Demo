@@ -13,13 +13,119 @@ The overall system diagram and main components are shown below
 
 ![Demo Overview](https://raw.githubusercontent.com/redhat-iot/2020Summit-IoT-Streaming-Demo/master/Docs/overall_arch.png)
 
-## Deploy this demo yourself 
+# Deploy this demo yourself 
 
-This POC demo uses some great cloud-native technologies, follow the instructions to spin it up on a personal cluster 
+This POC demo uses some great cloud-native technologies, follow the instructions to spin it up on a personal cluster It can be deployed with the manual instuctions shown below or the Simple IoTCLI instuctions if using the [IoTCLI command line tool](https://github.com/redhat-iot/iot-dev)
 
-### Prerequisites 
+## IoTCLI Install
 
-1. An Openshift Cluster Running K8's version > 1.15 
+### Prerequisites For IoTCLI Install 
+
+1. An Openshift Cluster 4.1> 
+- For a quickstart [Code ready containers](https://developers.redhat.com/products/codeready-containers/overview) may be used however they have not been tested with this system. 
+
+2. The latest IoTCLI download moved into yout `$PATH`
+
+### Provision Knative 
+
+1. Run `IoTCLI knative setup` which will setup knative eventing and serving on your cluster 
+
+2. Check status with `IoTCLI knative setup --status` Which should resemble the following 
+
+```
+2020/04/24 15:14:00 knative Serving Install Status:
+DependenciesInstalled==True
+DeploymentsAvaliable==True
+InstallSucceeded=True
+Ready=True
+2020/04/24 15:14:00 Context switched to namespace: knative-eventing
+2020/04/24 15:14:00 NAME                                   READY   STATUS    RESTARTS   AGE
+broker-controller-58fbf6569b-zgmz8     1/1     Running   0          12m
+eventing-controller-5b9c5765dd-2w7cf   1/1     Running   2          12m
+eventing-webhook-5cd6c688f4-7qzxw      1/1     Running   0          12m
+imc-controller-845fc8776b-rcpzf        1/1     Running   0          12m
+imc-dispatcher-5f9565cdbd-rmwlr        1/1     Running   0          12m
+```
+
+### Provision Kafka 
+
+1. Run `IoTCLI kafka setup` to deploy kafka to your cluster with the strimzi Operator 
+
+2. Deploy the http->kafka bridge with `IoTCLI kafka bridge` 
+
+3. Follow the Instructions to check status 
+- `To check status of Kafka HTTP bridge run 'curl -v GET http://my-bridge.io/healthy'`
+
+  Which should show 
+
+  ```
+  < HTTP/1.1 200 OK
+  < content-length: 0
+  * Added cookie 9d04d3bd5bc37b277b860a02c6cf350d="69a5f362b53812ea1dbbee66d616958b" for domain my-bridge.io, path /, expire 0
+  < Set-Cookie: 9d04d3bd5bc37b277b860a02c6cf350d=69a5f362b53812ea1dbbee66d616958b; path=/; HttpOnly
+  < Cache-control: private
+  < 
+  * Connection #1 to host my-bridge.io left intact
+  ```
+
+### Setup Ceph Object Storage 
+
+1. Run `IoTCLI ceph setup` to provision ceph 
+- This will tak some time for all the resources to become available 
+
+2. Run `IoTCLI ceph secrets` to get the login secrets for your ceph instance and the endpoint name, these will be used later. 
+
+### Setup the Tensorflow Serving Deployments 
+
+1. Run `IoTCLI tensorflowServing setup` Which will spin up the tensorflow serving pod 
+
+### Deploy the `Video Analytics` knative service 
+
+1. Run 
+
+```
+IoTCLI knative service video-analytics -n kafka --cephEndpoint <Your Ceph Endpoint> --cephAccessKey <Your Ceph Access Key> --cephSecretKey<Your Ceph Secret Key>
+```
+
+### Setup the Kafka -> Knative Bridge 
+
+1. Run 
+```
+IoTCLI knative source kafka video-analytics -n kafka 
+```
+
+### Start the IoT Video Simulator
+
+1. Navigate to the `iotDeviceSimulator-kafka` with 
+-  `cd iotDeviceSimulator-kafka`
+2. Set the `STREAMURL` environment variable with 
+- `export STREAMURL=<Desired Youtube livestream>`
+3. Set Kafka Bridge Endpoint for this demo as follows 
+- `export ENDPOINT=my-bridge.io/topics/my-topic`
+4. Start the Simulator
+- `go run ./cmd` 
+
+### Deploy the `video-serving` service
+
+1. Run `IoTCLI service video-serving -n kafka --cephEndpoint <Your Ceph Endpoint> --cephAccessKey <Your Ceph Access Key> --cephSecretKey<Your Ceph Secret Key>` to deploy the service 
+
+2. Run `IoTCLI service --status` to get the url for the `video serving` service 
+
+```
+NAME            URL                                                           LATESTCREATED         LATESTREADY           READY   REASON
+video-analytics   http://video-analytics.kafka.apps.astoycos-ocp.shiftstack.com   video-analytics-895k8   video-analytics-895k8   True 
+video-serving   http://video-serving.kafka.apps.astoycos-ocp.shiftstack.com   video-serving-9cfps   video-serving-9cfps   True   
+```
+
+3. Follow the [final step instructions](#Final-Steps)
+
+
+
+## Manual Install from Source 
+
+### Prerequisites For Manual Install from Source
+
+1. An Openshift Cluster 4.1> 
 - For a quickstart [Code ready containers](https://developers.redhat.com/products/codeready-containers/overview) may be used however they have not been tested with this system. 
 
 2. Knative Eventing and Serving installed 
@@ -132,7 +238,12 @@ Now the Analyzed video stream segments should be stored in Ceph
 NAME            URL                                                           LATESTCREATED         LATESTREADY           READY   REASON
 video-serving   http://video-serving.kafka.apps.astoycos-ocp.shiftstack.com   video-serving-jsct5   video-serving-jsct5   True    
 ```
-4. Go to the URL and add `/video/out.m3u8` to the path for a final URL as follows 
+
+Move to [Final Step instructions](Final-Steps)
+
+## Final Steps
+
+Go to the URL and add `/video/out.m3u8` to the path for a final URL as follows 
 
 `http://video-serving.kafka.apps.astoycos-ocp.shiftstack.com/video/out.m3u8`
 

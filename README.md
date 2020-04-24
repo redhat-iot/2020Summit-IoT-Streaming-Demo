@@ -107,7 +107,11 @@ IoTCLI knative source kafka video-analytics -n kafka
 
 ### Deploy the `video-serving` service
 
-1. Run `IoTCLI service video-serving -n kafka --cephEndpoint <Your Ceph Endpoint> --cephAccessKey <Your Ceph Access Key> --cephSecretKey<Your Ceph Secret Key>` to deploy the service 
+1. Run 
+```
+IoTCLI service video-serving -n kafka --cephEndpoint <Your Ceph Endpoint> --cephAccessKey <Your Ceph Access Key> --cephSecretKey<Your Ceph Secret Key>` 
+```
+to deploy the service 
 
 2. Run `IoTCLI service --status` to get the url for the `video serving` service 
 

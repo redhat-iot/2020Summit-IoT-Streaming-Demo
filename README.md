@@ -247,10 +247,12 @@ Move to [Final Step instructions](Final-Steps)
 
 ## Final Steps
 
-Go to the URL and add `/video/out.m3u8` to the path for a final URL as follows 
+Go to the a web browser and type in the `video-serving` service's URL. Add `/video/out.m3u8` to the path for a final URL as follows 
 
 `http://video-serving.kafka.apps.astoycos-ocp.shiftstack.com/video/out.m3u8`
 
 The following webpage will resemble the following, showing live video streaming an anlytics
 
 ![app image](https://raw.githubusercontent.com/redhat-iot/2020Summit-IoT-Streaming-Demo/master/Docs/Screenshot%20from%202020-04-01%2017-16-27.png)
+
+Note:: You may need to add the service's URL to your `etc/hosts` file for correct DNS lookup 

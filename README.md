@@ -251,6 +251,6 @@ Go to the URL and add `/video/out.m3u8` to the path for a final URL as follows
 
 `http://video-serving.kafka.apps.astoycos-ocp.shiftstack.com/video/out.m3u8`
 
-The following webpage will resemble the following 
+The following webpage will resemble the following, showing live video streaming an anlytics
 
 ![app image](https://raw.githubusercontent.com/redhat-iot/2020Summit-IoT-Streaming-Demo/master/Docs/Screenshot%20from%202020-04-01%2017-16-27.png)

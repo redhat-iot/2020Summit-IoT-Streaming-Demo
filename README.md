@@ -73,7 +73,9 @@ imc-dispatcher-5f9565cdbd-rmwlr        1/1     Running   0          12m
 1. Run `IoTCLI ceph setup` to provision ceph 
 - This will tak some time for all the resources to become available 
 
-2. Run `IoTCLI ceph secrets` to get the login secrets for your ceph instance and the endpoint name, these will be used later. 
+2.Run `IoTCLI ceph user <ceph username` to setup a new ceph user connected to credential store `my-store`
+
+3.Run `IoTCLI ceph secrets <ceph username>` to get the login secrets for your ceph instance and the endpoint name, these will be used later. 
 
 ### Setup the Tensorflow Serving Deployments 
 
@@ -107,7 +109,11 @@ IoTCLI knative source kafka video-analytics -n kafka
 
 ### Deploy the `video-serving` service
 
-1. Run `IoTCLI service video-serving -n kafka --cephEndpoint <Your Ceph Endpoint> --cephAccessKey <Your Ceph Access Key> --cephSecretKey<Your Ceph Secret Key>` to deploy the service 
+1. Run 
+```
+IoTCLI service video-serving -n kafka --cephEndpoint <Your Ceph Endpoint> --cephAccessKey <Your Ceph Access Key> --cephSecretKey<Your Ceph Secret Key>` 
+```
+to deploy the service 
 
 2. Run `IoTCLI service --status` to get the url for the `video serving` service 
 
@@ -243,10 +249,12 @@ Move to [Final Step instructions](Final-Steps)
 
 ## Final Steps
 
-Go to the URL and add `/video/out.m3u8` to the path for a final URL as follows 
+Go to the a web browser and type in the `video-serving` service's URL. Add `/video/out.m3u8` to the path for a final URL as follows 
 
 `http://video-serving.kafka.apps.astoycos-ocp.shiftstack.com/video/out.m3u8`
 
-The following webpage will resemble the following 
+The following webpage will resemble the following, showing live video streaming an anlytics
 
 ![app image](https://raw.githubusercontent.com/redhat-iot/2020Summit-IoT-Streaming-Demo/master/Docs/Screenshot%20from%202020-04-01%2017-16-27.png)
+
+Note:: You may need to add the service's URL to your `etc/hosts` file for correct DNS lookup 

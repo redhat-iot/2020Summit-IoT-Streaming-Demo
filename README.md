@@ -21,7 +21,7 @@ This POC demo uses some great cloud-native technologies, follow the instructions
 
 ### Prerequisites For IoTCLI Install 
 
-1. An Openshift Cluster 4.1> 
+1. An Openshift Cluster 4.3> 
 - For a quickstart [Code ready containers](https://developers.redhat.com/products/codeready-containers/overview) may be used however they have not been tested with this system. 
 
 2. The latest IoTCLI download moved into yout `$PATH`
@@ -54,7 +54,7 @@ imc-dispatcher-5f9565cdbd-rmwlr        1/1     Running   0          12m
 2. Deploy the http->kafka bridge with `IoTCLI kafka bridge` 
 
 3. Follow the Instructions to check status 
-- `To check status of Kafka HTTP bridge run 'curl -v GET http://my-bridge.io/healthy'`
+- `To check status of Kafka HTTP bridge follow the prompt at the end of the install logs 'curl -v GET http://<your bridge route>/healthy'`
 
   Which should show 
 
@@ -73,13 +73,13 @@ imc-dispatcher-5f9565cdbd-rmwlr        1/1     Running   0          12m
 1. Run `IoTCLI ceph setup` to provision ceph 
 - This will tak some time for all the resources to become available 
 
-2.Run `IoTCLI ceph user <ceph username` to setup a new ceph user connected to credential store `my-store`
+2. Run `IoTCLI ceph user <ceph username>` to setup a new ceph user connected to credential store `my-store`
 
-3.Run `IoTCLI ceph secrets <ceph username>` to get the login secrets for your ceph instance and the endpoint name, these will be used later. 
+3. Run `IoTCLI ceph secrets <ceph username>` to get the login secrets and ceph endpoint URL for your ceph instance, these will be used later. 
 
 ### Setup the Tensorflow Serving Deployments 
 
-1. Run `IoTCLI tensorflowServing setup` Which will spin up the tensorflow serving pod 
+1. Run `IoTCLI tensorflowServing setup -n kafka` Which will spin up the tensorflow serving pod 
 
 ### Deploy the `Video Analytics` knative service 
 
@@ -111,7 +111,7 @@ IoTCLI knative source kafka video-analytics -n kafka
 
 1. Run 
 ```
-IoTCLI service video-serving -n kafka --cephEndpoint <Your Ceph Endpoint> --cephAccessKey <Your Ceph Access Key> --cephSecretKey<Your Ceph Secret Key>` 
+IoTCLI knative service video-serving -n kafka --cephEndpoint <Your Ceph Endpoint> --cephAccessKey <Your Ceph Access Key> --cephSecretKey<Your Ceph Secret Key>` 
 ```
 to deploy the service 
 

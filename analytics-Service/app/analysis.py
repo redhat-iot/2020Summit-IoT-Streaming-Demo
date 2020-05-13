@@ -143,6 +143,12 @@ def generate():
                   aws_access_key_id = s3_access_key_id,
                   aws_secret_access_key = s3_secret_access_key,
                   )
+
+  try: 
+    s3.delete_bucket(s3_bucket)
+  except: 
+    print(s3_access_key_id + " Bucket Does not Exist Create It instead")
+  
   s3.create_bucket(Bucket=s3_bucket)
 
   if not os.path.exists("app/segments"):
@@ -217,11 +223,15 @@ def generate():
   i = 0
   video_writer.close() 
   video_digest.kill()
- 
+  try: 
+    s3.delete_bucket(s3_bucket)
+  except: 
+    print(s3_access_key_id + " Bucket Does not Exist")
 
 if __name__ == '__main__':
   # construct the argument parser and parse command line arguments
   #Load model 
+
   print("Writing Log file")
   generate()
 

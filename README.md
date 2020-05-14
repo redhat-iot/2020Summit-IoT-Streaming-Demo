@@ -71,7 +71,7 @@ imc-dispatcher-5f9565cdbd-rmwlr        1/1     Running   0          12m
 ### Setup Ceph Object Storage 
 
 1. Run `IoTCLI ceph setup` to provision ceph 
-- This will tak some time for all the resources to become available 
+- BE PATIENT This will take some time for all the resources to become available 
 
 2. Run `IoTCLI ceph user <ceph username>` to setup a new ceph user connected to credential store `my-store`
 
@@ -103,7 +103,7 @@ IoTCLI knative source kafka video-analytics -n kafka
 2. Set the `STREAMURL` environment variable with 
 - `export STREAMURL=<Desired Youtube livestream>`
 3. Set Kafka Bridge Endpoint for this demo as follows 
-- `export ENDPOINT=my-bridge.io/topics/my-topic`
+- `export ENDPOINT=<kafka-bridge-endpoint>/topics/my-topic`
 4. Start the Simulator
 - `go run ./cmd` 
 
